@@ -5,17 +5,17 @@ import { Button } from './Button'
 import { useStore } from '@/store/appStore'
 
 const DOCUMENTS = [
-  { key: 'receiver', label: 'Receiver Details' },
-  { key: 'nominee', label: 'Nominee Details' },
-  { key: 'guarantor1', label: 'Guarantor 1 Details' },
-  { key: 'guarantor2', label: 'Guarantor 2 Details' },
-  { key: 'contract', label: 'Loan Contract' },
-  { key: 'sanction', label: 'Loan Sanction Letter' },
-  { key: 'promissory', label: 'Promissory Note' },
-  { key: 'cash-voucher', label: 'Cash Voucher' },
-  { key: 'voucher', label: 'Voucher' },
-  { key: 'mortgage', label: 'Mortgage Details' },
-  { key: 'gold-receipt', label: 'Gold Receipt' },
+  { key: 'receiver',    label: 'Receiver Details' },
+  { key: 'nominee',     label: 'Nominee Details' },
+  { key: 'guarantor1',  label: 'Guarantor 1 Details' },
+  { key: 'guarantor2',  label: 'Guarantor 2 Details' },
+  { key: 'contract',    label: 'Loan Contract' },
+  { key: 'sanction',    label: 'Loan Sanction Letter' },
+  { key: 'promissory',  label: 'Promissory Note' },
+  { key: 'cash-voucher',label: 'Cash Voucher' },
+  { key: 'voucher',     label: 'Voucher' },
+  { key: 'mortgage',    label: 'Mortgage Details' },
+  { key: 'gold-receipt',label: 'Gold Receipt' },
   { key: 'declaration', label: 'Declaration Form' },
 ]
 
@@ -70,10 +70,16 @@ export function DownloadDropdown({ loanId }: { loanId: number }) {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 z-50 mt-1 w-52 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden">
+          <div className="absolute left-0 z-50 mt-1 w-52 rounded-xl shadow-2xl overflow-hidden"
+            style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
             {DOCUMENTS.map(doc => (
-              <button key={doc.key} className="w-full text-left px-4 py-2 text-xs hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer" onClick={() => download(doc.key)}>
-                <FileText size={12} className="text-slate-400 shrink-0" />{doc.label}
+              <button key={doc.key} onClick={() => download(doc.key)}
+                className="w-full text-left px-4 py-2 text-xs flex items-center gap-2 cursor-pointer transition-colors"
+                style={{ color: 'var(--text-secondary)' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)' }}>
+                <FileText size={12} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
+                {doc.label}
               </button>
             ))}
           </div>

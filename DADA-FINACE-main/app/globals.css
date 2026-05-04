@@ -2,33 +2,75 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Palette Tokens ─────────────────────────────────────────── */
+/* ── Light Mode Palette (Calm & Neutral) ───────────────────── */
+/*
+  Warm Canvas     #FAFAF9  — global page background (warm off-white)
+  Soft Surface    #F5F4F0  — sidebar, cards, containers
+  Muted Border    #E8E6E1  — hairline dividers
+  Hover Wash      #EFEDE8  — hover state background
+  Ink Primary     #1C1917  — headings & primary text (warm near-black)
+  Stone Secondary #78716C  — secondary / metadata text
+  Accent          #5B7FA6  — muted steel-blue (calm, not vivid)
+  Accent Hover    #4A6A8E  — slightly deeper on hover
+  Accent Tint     rgba(91,127,166,0.10) — active background wash
+  Success         #4A9E7F  — muted emerald
+  Warning         #C9882A  — muted amber
+  Error           #C0544F  — muted rose
+*/
 :root {
-  --bg:             #FFFFFF;
-  --surface:        #E2E8F0;
-  --text-primary:   #0F172A;
-  --text-secondary: #334155;
-  --border:         #E2E8F0;
-  --hover:          #F1F5F9;
-  --accent:         #3B82F6;
-  --accent-hover:   #2563EB;
-  --accent-tint:    rgba(59, 130, 246, 0.10);
-  --success:        #22C55E;
-  --error:          #EF4444;
+  --bg:             #FAFAF9;
+  --surface:        #F5F4F0;
+  --form-field:     #FFFFFF;
+  --text-primary:   #1C1917;
+  --text-secondary: #78716C;
+  --border:         #E8E6E1;
+  --hover:          #EFEDE8;
+  --accent:         #5B7FA6;
+  --accent-hover:   #4A6A8E;
+  --accent-tint:    rgba(91, 127, 166, 0.10);
+  --success:        #4A9E7F;
+  --warning:        #C9882A;
+  --error:          #C0544F;
+  --success-tint:   rgba(74, 158, 127, 0.10);
+  --warning-tint:   rgba(201, 136, 42, 0.10);
+  --error-tint:     rgba(192, 84, 79, 0.10);
 }
 
+/* ── Dark Mode Palette ──────────────────────────────────────── */
+/*
+  Canvas          #0A0A0F  — deep blue-black page background
+  Surface         #12131A  — sidebar & topbar
+  Card            #1A1B25  — cards, modals, containers
+  Form Field      #20212E  — input / select / textarea backgrounds
+  Hover           #252636  — hover state on nav & rows
+  Border          #2E2F42  — subtle violet-tinted borders
+  Text Primary    #F0F0FF  — near-white with cool blue tint
+  Text Secondary  #8B8FA8  — muted blue-gray metadata
+  Accent          #7C8FFF  — soft indigo-blue (distinct from light mode)
+  Accent Hover    #6B7EF0  — deeper on hover
+  Accent Tint     rgba(124,143,255,0.12)
+  Success         #34D399  — vivid emerald
+  Warning         #FBBF24  — golden amber
+  Error           #FB7185  — soft rose-red
+*/
 .dark {
-  --bg:             #0F172A;
-  --surface:        #334155;
-  --text-primary:   #FFFFFF;
-  --text-secondary: #E2E8F0;
-  --border:         #334155;
-  --hover:          #1E293B;
-  --accent:         #3B82F6;
-  --accent-hover:   #2563EB;
-  --accent-tint:    rgba(59, 130, 246, 0.15);
-  --success:        #22C55E;
-  --error:          #EF4444;
+  --bg:             #0A0A0F;
+  --surface:        #12131A;
+  --card:           #1A1B25;
+  --form-field:     #20212E;
+  --text-primary:   #F0F0FF;
+  --text-secondary: #8B8FA8;
+  --border:         #2E2F42;
+  --hover:          #252636;
+  --accent:         #7C8FFF;
+  --accent-hover:   #6B7EF0;
+  --accent-tint:    rgba(124, 143, 255, 0.12);
+  --success:        #34D399;
+  --warning:        #FBBF24;
+  --error:          #FB7185;
+  --success-tint:   rgba(52, 211, 153, 0.12);
+  --warning-tint:   rgba(251, 191, 36, 0.12);
+  --error-tint:     rgba(251, 113, 133, 0.12);
 }
 
 /* ── Base ───────────────────────────────────────────────────── */

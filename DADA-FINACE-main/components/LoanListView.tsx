@@ -36,11 +36,11 @@ export function LoanListView({ filterStatus, title, showApprove, showDisburse }:
     const loan = loans.find(l => l.id === confirmId)
     if (confirmAction === 'approve') {
       approveLoan(confirmId)
-      showToast(`Loan ${loan?.loanNo} approved successfully`, 'success')
+      showToast(`Loan ${loan?.loanNo} approved`, 'success')
       addNotification('Loan Approved', `${loan?.loanNo} has been approved.`)
     } else if (confirmAction === 'disburse') {
       disburseLoan(confirmId)
-      showToast(`Loan ${loan?.loanNo} marked as disbursed`, 'success')
+      showToast(`Loan ${loan?.loanNo} disbursed`, 'success')
       addNotification('Loan Disbursed', `${loan?.loanNo} has been disbursed.`)
     } else {
       deleteLoan(confirmId)
@@ -71,33 +71,53 @@ export function LoanListView({ filterStatus, title, showApprove, showDisburse }:
           return (
             <div className="flex items-center gap-1.5 flex-wrap">
               <DownloadDropdown loanId={loan.id} />
-              <button title="Edit" onClick={() => router.push('/loans/add')} className="p-1.5 rounded hover:bg-blue-50 text-blue-700 cursor-pointer"><Pencil size={13} /></button>
+              <button title="Edit" onClick={() => router.push('/loans/add')}
+                className="p-1.5 rounded-lg cursor-pointer transition-colors"
+                style={{ color: 'var(--accent)' }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-tint)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                <Pencil size={13} />
+              </button>
               {(showApprove || loan.status === 'pending') && (
-                <button title="Approve" onClick={() => confirm(loan.id, 'approve')} className="p-1.5 rounded hover:bg-green-50 text-green-700 cursor-pointer"><CheckCircle size={13} /></button>
+                <button title="Approve" onClick={() => confirm(loan.id, 'approve')}
+                  className="p-1.5 rounded-lg cursor-pointer transition-colors"
+                  style={{ color: 'var(--success)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--success-tint)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <CheckCircle size={13} />
+                </button>
               )}
               {(showDisburse || loan.status === 'approved') && (
-                <button title="Disburse" onClick={() => confirm(loan.id, 'disburse')} className="p-1.5 rounded hover:bg-teal-50 text-teal-700 cursor-pointer"><Banknote size={13} /></button>
+                <button title="Disburse" onClick={() => confirm(loan.id, 'disburse')}
+                  className="p-1.5 rounded-lg cursor-pointer transition-colors"
+                  style={{ color: 'var(--success)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--success-tint)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <Banknote size={13} />
+                </button>
               )}
-              <button title="Delete" onClick={() => confirm(loan.id, 'delete')} className="p-1.5 rounded hover:bg-red-50 text-red-600 cursor-pointer"><Trash2 size={13} /></button>
+              <button title="Delete" onClick={() => confirm(loan.id, 'delete')}
+                className="p-1.5 rounded-lg cursor-pointer transition-colors"
+                style={{ color: 'var(--error)' }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'var(--error-tint)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                <Trash2 size={13} />
+              </button>
             </div>
           )
-        }}
+        }},
       ]} />
       <Modal open={!!confirmId} onClose={() => { setConfirmId(null); setConfirmAction(null) }} title="Confirm Action" size="sm">
-        <p className="text-sm text-slate-600 mb-4">
-          {confirmAction === 'delete'
-            ? 'Are you sure you want to delete this loan? This cannot be undone.'
-            : confirmAction === 'approve'
-            ? 'Approve this loan application?'
+        <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+          {confirmAction === 'delete' ? 'Are you sure you want to delete this loan? This cannot be undone.'
+            : confirmAction === 'approve' ? 'Approve this loan application?'
             : 'Mark this loan as disbursed?'}
         </p>
         <div className="flex gap-2 justify-end">
           <Button variant="outline" size="sm" onClick={() => { setConfirmId(null); setConfirmAction(null) }}>Cancel</Button>
-          <Button
-            size="sm"
+          <Button size="sm"
             variant={confirmAction === 'delete' ? 'danger' : confirmAction === 'approve' ? 'success' : 'primary'}
-            onClick={execute}
-          >
+            onClick={execute}>
             {confirmAction === 'delete' ? 'Delete' : confirmAction === 'approve' ? 'Approve' : 'Disburse'}
           </Button>
         </div>

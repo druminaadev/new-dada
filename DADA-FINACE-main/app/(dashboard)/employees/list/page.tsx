@@ -29,12 +29,8 @@ export default function EmployeeListPage() {
   const save = () => {
     if (!editing) return
     updateEmployee(editing.id, { ...form, branchId: Number(form.branchId) })
-    showToast('Employee updated successfully', 'success')
+    showToast('Employee updated', 'success')
     setEditModal(false)
-  }
-  const remove = (id: number) => {
-    deleteEmployee(id)
-    showToast('Employee deleted', 'warning')
   }
   const enriched = employees.map(e => ({ ...e, branchName: branches.find(b => b.id === e.branchId)?.name ?? '—' }))
 
@@ -46,10 +42,22 @@ export default function EmployeeListPage() {
         { key: 'role', header: 'Role' }, { key: 'branchName', header: 'Branch' }, { key: 'contact', header: 'Contact' }, { key: 'email', header: 'Email' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
           <div className="flex gap-2">
-            <button onClick={() => openEdit(row as unknown as Employee)} className="p-1.5 rounded hover:bg-blue-50 text-blue-700 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove((row as unknown as Employee).id)} className="p-1.5 rounded hover:bg-red-50 text-red-600 cursor-pointer"><Trash2 size={13} /></button>
+            <button onClick={() => openEdit(row as unknown as Employee)}
+              className="p-1.5 rounded-lg cursor-pointer transition-colors"
+              style={{ color: 'var(--accent)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-tint)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+              <Pencil size={13} />
+            </button>
+            <button onClick={() => { deleteEmployee((row as unknown as Employee).id); showToast('Employee deleted', 'warning') }}
+              className="p-1.5 rounded-lg cursor-pointer transition-colors"
+              style={{ color: 'var(--error)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--error-tint)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+              <Trash2 size={13} />
+            </button>
           </div>
-        )}
+        )},
       ]} />
       <Modal open={editModal} onClose={() => setEditModal(false)} title="Edit Employee">
         <div className="grid grid-cols-2 gap-4">

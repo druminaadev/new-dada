@@ -10,6 +10,25 @@ import { Select } from '@/components/ui/Select'
 import { useStore } from '@/store/appStore'
 import { useUIStore } from '@/store/uiStore'
 
+function ActionButtons({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
+  return (
+    <div className="flex gap-2">
+      <button onClick={onEdit} className="p-1.5 rounded-lg cursor-pointer transition-colors"
+        style={{ color: 'var(--accent)' }}
+        onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-tint)')}
+        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+        <Pencil size={13} />
+      </button>
+      <button onClick={onDelete} className="p-1.5 rounded-lg cursor-pointer transition-colors"
+        style={{ color: 'var(--error)' }}
+        onMouseEnter={e => (e.currentTarget.style.background = 'var(--error-tint)')}
+        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+        <Trash2 size={13} />
+      </button>
+    </div>
+  )
+}
+
 export function StatePage() {
   const { states, addState, updateState, deleteState } = useStore()
   const { showToast } = useUIStore()
@@ -21,11 +40,10 @@ export function StatePage() {
   const openEdit = (s: { id: number; name: string }) => { setEditing(s); setName(s.name); setOpen(true) }
   const save = () => {
     if (!name.trim()) return
-    if (editing) { updateState(editing.id, { name }); showToast('State updated successfully', 'success') }
-    else { addState({ name }); showToast('State added successfully', 'success') }
+    if (editing) { updateState(editing.id, { name }); showToast('State updated', 'success') }
+    else { addState({ name }); showToast('State added', 'success') }
     setOpen(false)
   }
-  const remove = (id: number) => { deleteState(id); showToast('State deleted', 'warning') }
 
   return (
     <>
@@ -33,11 +51,8 @@ export function StatePage() {
       <DataTable data={states} searchPlaceholder="Search states..." columns={[
         { key: 'id', header: '#', width: 'w-16' }, { key: 'name', header: 'State Name' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
-          <div className="flex gap-2">
-            <button onClick={() => openEdit(row)} className="p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove(row.id)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 cursor-pointer"><Trash2 size={13} /></button>
-          </div>
-        )}
+          <ActionButtons onEdit={() => openEdit(row)} onDelete={() => { deleteState(row.id); showToast('State deleted', 'warning') }} />
+        )},
       ]} />
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? 'Edit State' : 'Add State'} size="sm">
         <div className="flex flex-col gap-4">
@@ -64,11 +79,10 @@ export function CityPage() {
   const save = () => {
     if (!form.name.trim() || !form.stateId) return
     const d = { name: form.name, stateId: Number(form.stateId) }
-    if (editing) { updateCity(editing.id, d); showToast('City updated successfully', 'success') }
-    else { addCity(d); showToast('City added successfully', 'success') }
+    if (editing) { updateCity(editing.id, d); showToast('City updated', 'success') }
+    else { addCity(d); showToast('City added', 'success') }
     setOpen(false)
   }
-  const remove = (id: number) => { deleteCity(id); showToast('City deleted', 'warning') }
   const enriched = cities.map(c => ({ ...c, stateName: states.find(s => s.id === c.stateId)?.name ?? '' }))
 
   return (
@@ -77,11 +91,8 @@ export function CityPage() {
       <DataTable data={enriched} searchPlaceholder="Search cities..." columns={[
         { key: 'id', header: '#', width: 'w-16' }, { key: 'name', header: 'City Name' }, { key: 'stateName', header: 'State' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
-          <div className="flex gap-2">
-            <button onClick={() => openEdit(row)} className="p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove(row.id)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 cursor-pointer"><Trash2 size={13} /></button>
-          </div>
-        )}
+          <ActionButtons onEdit={() => openEdit(row)} onDelete={() => { deleteCity(row.id); showToast('City deleted', 'warning') }} />
+        )},
       ]} />
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? 'Edit City' : 'Add City'} size="sm">
         <div className="flex flex-col gap-4">
@@ -109,11 +120,10 @@ export function AreaPage() {
   const save = () => {
     if (!form.name.trim() || !form.cityId) return
     const d = { name: form.name, cityId: Number(form.cityId) }
-    if (editing) { updateArea(editing.id, d); showToast('Area updated successfully', 'success') }
-    else { addArea(d); showToast('Area added successfully', 'success') }
+    if (editing) { updateArea(editing.id, d); showToast('Area updated', 'success') }
+    else { addArea(d); showToast('Area added', 'success') }
     setOpen(false)
   }
-  const remove = (id: number) => { deleteArea(id); showToast('Area deleted', 'warning') }
   const enriched = areas.map(a => {
     const city = cities.find(c => c.id === a.cityId)
     return { ...a, cityName: city?.name ?? '', stateName: states.find(s => s.id === city?.stateId)?.name ?? '' }
@@ -125,11 +135,8 @@ export function AreaPage() {
       <DataTable data={enriched} searchPlaceholder="Search areas..." columns={[
         { key: 'id', header: '#', width: 'w-16' }, { key: 'name', header: 'Area Name' }, { key: 'cityName', header: 'City' }, { key: 'stateName', header: 'State' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
-          <div className="flex gap-2">
-            <button onClick={() => openEdit(row)} className="p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove(row.id)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 cursor-pointer"><Trash2 size={13} /></button>
-          </div>
-        )}
+          <ActionButtons onEdit={() => openEdit(row)} onDelete={() => { deleteArea(row.id); showToast('Area deleted', 'warning') }} />
+        )},
       ]} />
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? 'Edit Area' : 'Add Area'} size="sm">
         <div className="flex flex-col gap-4">
@@ -156,11 +163,10 @@ export function BranchPage() {
   const openEdit = (b: { id: number; name: string; address: string }) => { setEditing(b); setForm({ name: b.name, address: b.address }); setOpen(true) }
   const save = () => {
     if (!form.name.trim()) return
-    if (editing) { updateBranch(editing.id, form); showToast('Branch updated successfully', 'success') }
-    else { addBranch(form); showToast('Branch added successfully', 'success') }
+    if (editing) { updateBranch(editing.id, form); showToast('Branch updated', 'success') }
+    else { addBranch(form); showToast('Branch added', 'success') }
     setOpen(false)
   }
-  const remove = (id: number) => { deleteBranch(id); showToast('Branch deleted', 'warning') }
 
   return (
     <>
@@ -168,11 +174,8 @@ export function BranchPage() {
       <DataTable data={branches} searchPlaceholder="Search branches..." columns={[
         { key: 'id', header: '#', width: 'w-16' }, { key: 'name', header: 'Branch Name' }, { key: 'address', header: 'Address' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
-          <div className="flex gap-2">
-            <button onClick={() => openEdit(row)} className="p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove(row.id)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 cursor-pointer"><Trash2 size={13} /></button>
-          </div>
-        )}
+          <ActionButtons onEdit={() => openEdit(row)} onDelete={() => { deleteBranch(row.id); showToast('Branch deleted', 'warning') }} />
+        )},
       ]} />
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? 'Edit Branch' : 'Add Branch'} size="sm">
         <div className="flex flex-col gap-4">
@@ -199,11 +202,10 @@ export function LoanTypePage() {
   const openEdit = (lt: { id: number; name: string; description: string }) => { setEditing(lt); setForm({ name: lt.name, description: lt.description }); setOpen(true) }
   const save = () => {
     if (!form.name.trim()) return
-    if (editing) { updateLoanType(editing.id, form); showToast('Loan type updated successfully', 'success') }
-    else { addLoanType(form); showToast('Loan type added successfully', 'success') }
+    if (editing) { updateLoanType(editing.id, form); showToast('Loan type updated', 'success') }
+    else { addLoanType(form); showToast('Loan type added', 'success') }
     setOpen(false)
   }
-  const remove = (id: number) => { deleteLoanType(id); showToast('Loan type deleted', 'warning') }
 
   return (
     <>
@@ -211,11 +213,8 @@ export function LoanTypePage() {
       <DataTable data={loanTypes} searchPlaceholder="Search loan types..." columns={[
         { key: 'id', header: '#', width: 'w-16' }, { key: 'name', header: 'Loan Type' }, { key: 'description', header: 'Description' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
-          <div className="flex gap-2">
-            <button onClick={() => openEdit(row)} className="p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove(row.id)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 cursor-pointer"><Trash2 size={13} /></button>
-          </div>
-        )}
+          <ActionButtons onEdit={() => openEdit(row)} onDelete={() => { deleteLoanType(row.id); showToast('Loan type deleted', 'warning') }} />
+        )},
       ]} />
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? 'Edit Loan Type' : 'Add Loan Type'} size="sm">
         <div className="flex flex-col gap-4">
@@ -242,11 +241,10 @@ export function BankPage() {
   const openEdit = (b: { id: number; name: string }) => { setEditing(b); setName(b.name); setOpen(true) }
   const save = () => {
     if (!name.trim()) return
-    if (editing) { updateBank(editing.id, { name }); showToast('Bank updated successfully', 'success') }
-    else { addBank({ name }); showToast('Bank added successfully', 'success') }
+    if (editing) { updateBank(editing.id, { name }); showToast('Bank updated', 'success') }
+    else { addBank({ name }); showToast('Bank added', 'success') }
     setOpen(false)
   }
-  const remove = (id: number) => { deleteBank(id); showToast('Bank deleted', 'warning') }
 
   return (
     <>
@@ -254,11 +252,8 @@ export function BankPage() {
       <DataTable data={banks} searchPlaceholder="Search banks..." columns={[
         { key: 'id', header: '#', width: 'w-16' }, { key: 'name', header: 'Bank Name' },
         { key: 'actions', header: 'Actions', sortable: false, accessor: (row) => (
-          <div className="flex gap-2">
-            <button onClick={() => openEdit(row)} className="p-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 cursor-pointer"><Pencil size={13} /></button>
-            <button onClick={() => remove(row.id)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 cursor-pointer"><Trash2 size={13} /></button>
-          </div>
-        )}
+          <ActionButtons onEdit={() => openEdit(row)} onDelete={() => { deleteBank(row.id); showToast('Bank deleted', 'warning') }} />
+        )},
       ]} />
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? 'Edit Bank' : 'Add Bank'} size="sm">
         <div className="flex flex-col gap-4">

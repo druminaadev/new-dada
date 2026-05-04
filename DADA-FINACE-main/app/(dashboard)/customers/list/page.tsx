@@ -12,11 +12,6 @@ export default function CustomerListPage() {
   const { showToast } = useUIStore()
   const router = useRouter()
 
-  const remove = (c: Customer) => {
-    deleteCustomer(c.id)
-    showToast(`Customer "${c.name}" deleted`, 'warning')
-  }
-
   const enriched = customers.map(c => ({
     ...c,
     branchName: branches.find(b => b.id === c.branchId)?.name ?? '—',
@@ -35,12 +30,22 @@ export default function CustomerListPage() {
           const c = row as unknown as Customer
           return (
             <div className="flex gap-1.5">
-              <button title="View Details" onClick={() => router.push(`/customers/${c.id}/details`)} className="p-1.5 rounded hover:bg-blue-50 text-blue-700 cursor-pointer"><Eye size={13} /></button>
-              <button title="Edit" onClick={() => router.push(`/customers/${c.id}/details`)} className="p-1.5 rounded hover:bg-blue-50 text-blue-700 cursor-pointer"><Pencil size={13} /></button>
-              <button title="Delete" onClick={() => remove(c)} className="p-1.5 rounded hover:bg-red-50 text-red-600 cursor-pointer"><Trash2 size={13} /></button>
+              {[
+                { icon: Eye,    title: 'View', action: () => router.push(`/customers/${c.id}/details`), color: 'var(--accent)', tint: 'var(--accent-tint)' },
+                { icon: Pencil, title: 'Edit', action: () => router.push(`/customers/${c.id}/details`), color: 'var(--accent)', tint: 'var(--accent-tint)' },
+                { icon: Trash2, title: 'Delete', action: () => { deleteCustomer(c.id); showToast(`Customer "${c.name}" deleted`, 'warning') }, color: 'var(--error)', tint: 'var(--error-tint)' },
+              ].map(btn => (
+                <button key={btn.title} title={btn.title} onClick={btn.action}
+                  className="p-1.5 rounded-lg cursor-pointer transition-colors"
+                  style={{ color: btn.color }}
+                  onMouseEnter={e => (e.currentTarget.style.background = btn.tint)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <btn.icon size={13} />
+                </button>
+              ))}
             </div>
           )
-        }}
+        }},
       ]} />
     </>
   )

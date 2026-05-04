@@ -68,8 +68,11 @@ export default function AddLoanPage() {
             <Input label="No. of Installments" type="number" required placeholder="e.g. 12" error={errors.installments?.message} {...register('installments', { required: 'Required', min: { value: 1, message: 'Min 1' } })} />
             <Input label="Interest Rate (%)" type="number" step="0.1" required placeholder="e.g. 12" error={errors.interestRate?.message} {...register('interestRate', { required: 'Required' })} />
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Interest Amount (₹) — Auto</label>
-              <div className="h-10 px-3 flex items-center text-sm bg-slate-50 border border-slate-200 rounded-md font-medium text-blue-800">{formatINR(interestAmount)}</div>
+              <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>Interest Amount (₹) — Auto</label>
+              <div className="h-10 px-3 flex items-center text-sm rounded-lg font-semibold"
+                style={{ background: 'var(--accent-tint)', color: 'var(--accent)', border: '1px solid var(--border)' }}>
+                {formatINR(interestAmount)}
+              </div>
             </div>
             <Input label="File Charges (₹)" type="number" placeholder="0" {...register('fileCharges')} />
             <Input label="Other Charges (₹)" type="number" placeholder="0" {...register('otherCharges')} />
@@ -77,11 +80,13 @@ export default function AddLoanPage() {
             <div className="sm:col-span-2 lg:col-span-3"><Textarea label="Remarks" placeholder="Additional notes..." {...register('remarks')} /></div>
           </div>
         </Card>
+
         <Card title="Security Deposit">
           <div className="flex gap-6 mb-5">
             {(['vehicle', 'gold'] as const).map(t => (
-              <label key={t} className="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700">
-                <input type="radio" value={t} checked={securityType === t} onChange={() => setSecurityType(t)} className="accent-blue-800" />
+              <label key={t} className="flex items-center gap-2 cursor-pointer text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                <input type="radio" value={t} checked={securityType === t} onChange={() => setSecurityType(t)}
+                  style={{ accentColor: 'var(--accent)' }} />
                 {t.charAt(0).toUpperCase() + t.slice(1)}
               </label>
             ))}
@@ -93,11 +98,12 @@ export default function AddLoanPage() {
               <Input label="Chassis Number" placeholder="Chassis number" {...register('chassisNo')} />
               <Input label="Number of Keys" type="number" placeholder="e.g. 2" {...register('keys')} />
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-slate-600">RC Book Received</label>
+                <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>RC Book Received</label>
                 <div className="flex gap-4 mt-2">
                   {['yes', 'no'].map(v => (
-                    <label key={v} className="flex items-center gap-2 text-sm cursor-pointer">
-                      <input type="radio" value={v} {...register('rcReceived')} className="accent-blue-800" />{v === 'yes' ? 'Yes' : 'No'}
+                    <label key={v} className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: 'var(--text-primary)' }}>
+                      <input type="radio" value={v} {...register('rcReceived')} style={{ accentColor: 'var(--accent)' }} />
+                      {v === 'yes' ? 'Yes' : 'No'}
                     </label>
                   ))}
                 </div>
@@ -112,11 +118,13 @@ export default function AddLoanPage() {
             </div>
           )}
         </Card>
+
         <Card title="Receiver Details">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
             <Input label="Receiver Mobile" placeholder="10-digit mobile" {...register('receiverMobile')} />
           </div>
         </Card>
+
         <div className="flex gap-3">
           <Button type="submit">Register Loan</Button>
           <Button type="button" variant="outline" onClick={() => router.push('/loans/list')}>Cancel</Button>

@@ -3,30 +3,10 @@ import { useUIStore } from '@/store/uiStore'
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react'
 
 const STYLES = {
-  success: {
-    wrap: 'bg-green-50 border-green-200',
-    text: 'text-green-800',
-    icon: CheckCircle,
-    iconCls: 'text-green-500',
-  },
-  error: {
-    wrap: 'bg-red-50 border-red-200',
-    text: 'text-red-800',
-    icon: XCircle,
-    iconCls: 'text-red-500',
-  },
-  warning: {
-    wrap: 'bg-amber-50 border-amber-200',
-    text: 'text-amber-800',
-    icon: AlertTriangle,
-    iconCls: 'text-amber-500',
-  },
-  info: {
-    wrap: 'bg-blue-50 border-blue-200',
-    text: 'text-blue-800',
-    icon: Info,
-    iconCls: 'text-blue-500',
-  },
+  success: { icon: CheckCircle, color: 'var(--success)', tint: 'var(--success-tint)' },
+  error:   { icon: XCircle,     color: 'var(--error)',   tint: 'var(--error-tint)' },
+  warning: { icon: AlertTriangle,color: 'var(--warning)', tint: 'var(--warning-tint)' },
+  info:    { icon: Info,         color: 'var(--accent)',  tint: 'var(--accent-tint)' },
 }
 
 export function ToastContainer() {
@@ -39,17 +19,13 @@ export function ToastContainer() {
         const s = STYLES[t.type]
         const Icon = s.icon
         return (
-          <div
-            key={t.id}
-            className={`flex items-start gap-3 px-4 py-3 rounded-lg border shadow-lg pointer-events-auto ${s.wrap}`}
-            style={{ animation: 'slideInRight 0.25s ease' }}
-          >
-            <Icon size={16} className={`${s.iconCls} mt-0.5 shrink-0`} />
-            <span className={`text-sm flex-1 ${s.text}`}>{t.message}</span>
-            <button
-              onClick={() => removeToast(t.id)}
-              className={`${s.text} opacity-50 hover:opacity-100 cursor-pointer shrink-0`}
-            >
+          <div key={t.id}
+            className="flex items-start gap-3 px-4 py-3 rounded-xl shadow-xl pointer-events-auto"
+            style={{ background: s.tint, border: `1px solid ${s.color}40`, animation: 'slideInRight 0.25s ease' }}>
+            <Icon size={16} style={{ color: s.color, flexShrink: 0, marginTop: 2 }} />
+            <span className="text-sm flex-1" style={{ color: 'var(--text-primary)' }}>{t.message}</span>
+            <button onClick={() => removeToast(t.id)} className="cursor-pointer opacity-60 hover:opacity-100 shrink-0"
+              style={{ color: 'var(--text-primary)' }}>
               <X size={14} />
             </button>
           </div>

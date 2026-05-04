@@ -36,10 +36,9 @@ function StakeholderFormPanel({ initial, onSave, label }: { initial: Nominee | G
     const age = Math.floor((Date.now() - new Date(watchDob).getTime()) / (365.25 * 24 * 3600 * 1000))
     if (age > 0) setValue('age', String(age))
   }
-  const onSubmit = (data: StakeholderForm) => onSave(data, photo)
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit(d => onSave(d, photo))} className="flex flex-col gap-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Select label="Identity Proof" placeholder="Select ID Type" options={IDENTITY_PROOFS.map(p => ({ value: p, label: p }))} {...register('identityProof')} />
         <Input label="Identity Number" placeholder="ID document number" {...register('identityNo')} />
@@ -50,8 +49,9 @@ function StakeholderFormPanel({ initial, onSave, label }: { initial: Nominee | G
         <Input label="Mobile Number" placeholder="10-digit mobile" error={errors.mobile?.message} {...register('mobile', { pattern: { value: /^[6-9]\d{9}$/, message: 'Invalid mobile' } })} />
         <div className="sm:col-span-2"><Textarea label="Address" placeholder="Residential address" {...register('address')} /></div>
       </div>
-      <div className="border-t border-slate-200 pt-4">
-        <h4 className="text-xs font-semibold text-slate-600 uppercase mb-3">Bank Details</h4>
+
+      <div className="pt-4" style={{ borderTop: '1px solid var(--border)' }}>
+        <h4 className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--text-secondary)' }}>Bank Details</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Input label="Account Number" placeholder="Bank account number" {...register('accountNo')} />
           <Input label="Account Holder Name" placeholder="Name as on account" {...register('holderName')} />
@@ -60,11 +60,15 @@ function StakeholderFormPanel({ initial, onSave, label }: { initial: Nominee | G
           <Input label="IFSC Code" placeholder="e.g. HDFC0001234" className="uppercase" {...register('ifsc')} />
         </div>
       </div>
-      <div className="border-t border-slate-200 pt-4">
-        <h4 className="text-xs font-semibold text-slate-600 uppercase mb-3">Profile Photo</h4>
+
+      <div className="pt-4" style={{ borderTop: '1px solid var(--border)' }}>
+        <h4 className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--text-secondary)' }}>Profile Photo</h4>
         <WebcamCapture onCapture={setPhoto} current={photo} />
       </div>
-      <div className="flex justify-end"><Button type="submit">Update {label}</Button></div>
+
+      <div className="flex justify-end">
+        <Button type="submit">Update {label}</Button>
+      </div>
     </form>
   )
 }
@@ -77,35 +81,55 @@ export default function CustomerDetailsPage({ params }: { params: { id: string }
   const customer = customers.find(c => c.id === Number(params.id))
 
   if (!customer) return (
-    <div className="text-center py-20 text-slate-500">
-      Customer not found. <button onClick={() => router.push('/customers/list')} className="text-blue-700 underline cursor-pointer">Go back</button>
+    <div className="text-center py-20" style={{ color: 'var(--text-secondary)' }}>
+      Customer not found.{' '}
+      <button onClick={() => router.push('/customers/list')} className="underline cursor-pointer" style={{ color: 'var(--accent)' }}>
+        Go back
+      </button>
     </div>
   )
 
   const handleNomineeSave = (data: StakeholderForm, photo: string) => {
     updateNominee(customer.id, { identityProof: data.identityProof, identityNo: data.identityNo, name: data.name, relation: data.relation, dob: data.dob, age: Number(data.age), mobile: data.mobile, address: data.address, photoUrl: photo, accountNo: data.accountNo, holderName: data.holderName, bankName: data.bankName, bankBranch: data.bankBranch, ifsc: data.ifsc, documentUrl: '' })
-    showToast('Nominee details saved successfully', 'success')
+    showToast('Nominee details saved', 'success')
   }
   const handleGuarantorSave = (slot: 1 | 2) => (data: StakeholderForm, photo: string) => {
     updateGuarantor(customer.id, slot, { slot, identityProof: data.identityProof, identityNo: data.identityNo, name: data.name, relation: data.relation, dob: data.dob, age: Number(data.age), mobile: data.mobile, address: data.address, photoUrl: photo, accountNo: data.accountNo, holderName: data.holderName, bankName: data.bankName, bankBranch: data.bankBranch, ifsc: data.ifsc, documentUrl: '' })
-    showToast(`Guarantor ${slot} details saved successfully`, 'success')
+    showToast(`Guarantor ${slot} details saved`, 'success')
   }
 
   return (
     <>
       <PageHeader title={`Customer Details — ${customer.name}`} />
-      <div className="bg-white border border-slate-200 rounded-lg p-4 mb-4 flex items-center gap-4">
-        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 font-bold text-lg">{customer.name.charAt(0)}</div>
+
+      {/* Customer summary card */}
+      <div className="rounded-xl p-4 mb-4 flex items-center gap-4"
+        style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0"
+          style={{ background: 'var(--accent-tint)', color: 'var(--accent)' }}>
+          {customer.name.charAt(0)}
+        </div>
         <div>
-          <div className="font-semibold text-slate-900">{customer.name}</div>
-          <div className="text-xs text-slate-500">{customer.appNo} · {customer.mobile} · {customer.aadhar}</div>
+          <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>{customer.name}</div>
+          <div className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+            {customer.appNo} · {customer.mobile} · {customer.aadhar}
+          </div>
         </div>
       </div>
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-        <div className="border-b border-slate-200 flex">
+
+      {/* Tabs */}
+      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
+        <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>
           {TABS.map((tab, i) => (
             <button key={tab} onClick={() => setActiveTab(i)}
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer ${activeTab === i ? 'border-blue-800 text-blue-800 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}>
+              className="px-6 py-3 text-sm font-medium transition-colors cursor-pointer"
+              style={{
+                color: activeTab === i ? 'var(--accent)' : 'var(--text-secondary)',
+                background: activeTab === i ? 'var(--accent-tint)' : 'transparent',
+                borderBottom: activeTab === i ? '2px solid var(--accent)' : '2px solid transparent',
+              }}
+              onMouseEnter={e => { if (activeTab !== i) e.currentTarget.style.background = 'var(--hover)' }}
+              onMouseLeave={e => { if (activeTab !== i) e.currentTarget.style.background = 'transparent' }}>
               {tab}
             </button>
           ))}
