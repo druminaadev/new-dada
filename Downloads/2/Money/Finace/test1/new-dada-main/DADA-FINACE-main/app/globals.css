@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Light Mode Palette (Calm & Neutral) ───────────────────── */
+/*
+  Warm Canvas     #FAFAF9  — global page background (warm off-white)
+  Soft Surface    #F5F4F0  — sidebar, cards, containers
+  Muted Border    #E8E6E1  — hairline dividers
+  Hover Wash      #EFEDE8  — hover state background
+  Ink Primary     #1C1917  — headings & primary text (warm near-black)
+  Stone Secondary #78716C  — secondary / metadata text
+  Accent          #5B7FA6  — muted steel-blue (calm, not vivid)
+  Accent Hover    #4A6A8E  — slightly deeper on hover
+  Accent Tint     rgba(91,127,166,0.10) — active background wash
+  Success         #4A9E7F  — muted emerald
+  Warning         #C9882A  — muted amber
+  Error           #C0544F  — muted rose
+*/
+:root {
+  --bg:             #FAFAF9;
+  --surface:        #F5F4F0;
+  --form-field:     #FFFFFF;
+  --text-primary:   #1C1917;
+  --text-secondary: #78716C;
+  --border:         #E8E6E1;
+  --hover:          #EFEDE8;
+  --accent:         #5B7FA6;
+  --accent-hover:   #4A6A8E;
+  --accent-tint:    rgba(91, 127, 166, 0.10);
+  --success:        #4A9E7F;
+  --warning:        #C9882A;
+  --error:          #C0544F;
+  --success-tint:   rgba(74, 158, 127, 0.10);
+  --warning-tint:   rgba(201, 136, 42, 0.10);
+  --error-tint:     rgba(192, 84, 79, 0.10);
+  /* Toast solid backgrounds — light mode */
+  --toast-success-bg:     #166534;
+  --toast-success-border: #15803d;
+  --toast-success-icon:   #4ade80;
+  --toast-success-text:   #f0fdf4;
+  --toast-error-bg:       #991b1b;
+  --toast-error-border:   #dc2626;
+  --toast-error-icon:     #fca5a5;
+  --toast-error-text:     #fef2f2;
+  --toast-warning-bg:     #92400e;
+  --toast-warning-border: #d97706;
+  --toast-warning-icon:   #fcd34d;
+  --toast-warning-text:   #fffbeb;
+  --toast-info-bg:        #1e3a5f;
+  --toast-info-border:    #3b82f6;
+  --toast-info-icon:      #93c5fd;
+  --toast-info-text:      #eff6ff;
+}
+
+/* ── Dark Mode Palette ──────────────────────────────────────── */
+/*
+  Canvas          #0A0A0F  — deep blue-black page background
+  Surface         #12131A  — sidebar & topbar
+  Card            #1A1B25  — cards, modals, containers
+  Form Field      #20212E  — input / select / textarea backgrounds
+  Hover           #252636  — hover state on nav & rows
+  Border          #2E2F42  — subtle violet-tinted borders
+  Text Primary    #F0F0FF  — near-white with cool blue tint
+  Text Secondary  #8B8FA8  — muted blue-gray metadata
+  Accent          #7C8FFF  — soft indigo-blue (distinct from light mode)
+  Accent Hover    #6B7EF0  — deeper on hover
+  Accent Tint     rgba(124,143,255,0.12)
+  Success         #34D399  — vivid emerald
+  Warning         #FBBF24  — golden amber
+  Error           #FB7185  — soft rose-red
+*/
+.dark {
+  --bg:             #0A0A0F;
+  --surface:        #12131A;
+  --card:           #1A1B25;
+  --form-field:     #20212E;
+  --text-primary:   #F0F0FF;
+  --text-secondary: #8B8FA8;
+  --border:         #2E2F42;
+  --hover:          #252636;
+  --accent:         #7C8FFF;
+  --accent-hover:   #6B7EF0;
+  --accent-tint:    rgba(124, 143, 255, 0.12);
+  --success:        #34D399;
+  --warning:        #FBBF24;
+  --error:          #FB7185;
+  --success-tint:   rgba(52, 211, 153, 0.12);
+  --warning-tint:   rgba(251, 191, 36, 0.12);
+  --error-tint:     rgba(251, 113, 133, 0.12);
+  /* Toast solid backgrounds — dark mode */
+  --toast-success-bg:     #14532d;
+  --toast-success-border: #16a34a;
+  --toast-success-icon:   #4ade80;
+  --toast-success-text:   #f0fdf4;
+  --toast-error-bg:       #7f1d1d;
+  --toast-error-border:   #ef4444;
+  --toast-error-icon:     #fca5a5;
+  --toast-error-text:     #fef2f2;
+  --toast-warning-bg:     #78350f;
+  --toast-warning-border: #f59e0b;
+  --toast-warning-icon:   #fcd34d;
+  --toast-warning-text:   #fffbeb;
+  --toast-info-bg:        #1e3a5f;
+  --toast-info-border:    #60a5fa;
+  --toast-info-icon:      #93c5fd;
+  --toast-info-text:      #eff6ff;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
